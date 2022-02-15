@@ -34,7 +34,8 @@ route.post('/', (req,res) => {
         let result = createUser(req.body);
         result.then(value => {
             res.json({
-                val : value 
+                name    : value.name,
+                email   : value.email
             })
         }).catch(err => {
                 res.status(400).json({
@@ -55,7 +56,8 @@ route.put('/:email', (req,res) => {
         let result = updateUser(req.params.email, req.body)
         result.then( value => {
             res.json({
-                value 
+                name    : value.name,
+                email   : value.email
             })
         }).catch(err => {
             res.status(400).json({
@@ -76,7 +78,8 @@ route.delete('/:email', (req,res) => {
     
     result.then(value => { 
         res.json({
-            value 
+            name    : value.name,
+            email   : value.email
         })
     }).catch(err => {
         res.status(400).json({
@@ -88,6 +91,7 @@ route.delete('/:email', (req,res) => {
 
 async function searchUserList() {
     let usersList = await usersModel.find({'status' : true})
+        .select({name:1,email:1});
     return usersList;
 }
 
