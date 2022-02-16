@@ -1,6 +1,7 @@
 const express = require('express');
 const usersModel = require('../models/users_model');
 const route = express.Router();
+const jwt = require('jwt');
 const bcrypt = require('bcrypt');
 
 
@@ -9,8 +10,16 @@ route.post('/', (req,res) => {
         .then(result => {
             if(result){
                 const passwordVal = bcrypt.compareSync(req.body.password, result.password);
-                if(!passwordVal) return res.status(400).json({Message : "Invalid user or password "});
-                res.json(result);
+                if(!passwordVal) return res.status(400).json({
+                    Message : "Invalid user or password "
+                });
+                const jwebtoken = jwt.sign({
+                    _id     : result._id, 
+                    name    : result.name, 
+                    email   : result.email},
+                    'password'
+                );
+                res.send(jwebtoken);
             }else{
                 res.status(400).json({Message : "Invalid user or password "});
             }
