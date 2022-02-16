@@ -6,5 +6,5 @@ Rest API written in Nodejs using the Expressjs framework to create routes and us
 
 * Nodejs
 * Expressjs (Nodejs Framework)
-* MongoDB (Base de datos)
+* MongoDB (Data base)
 * Mongoose (ODM)
