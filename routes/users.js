@@ -30,33 +30,33 @@ route.get('/', (req, res) => {
 });
 
 route.post('/', (req,res) => {
-
-    // User email validation: Prevents email duplication
-    usersModel.findOne({email : req.body.email}, (err, user) => {
-        if(err){
-            return res.status(400).json({error: "Server error"})
-        }
-
-        if(user){
-            return res.status(400).json({message : "User email already exists"})
-        }
-    });
-    
     //Schema validation to user name and user email
     const {error, value} = schema.validate({name : req.body.name, email : req.body.email});
+
     if (!error) {
-        let result = createUser(req.body);
-        result.then(value => {
-            res.json({
-                name    : value.name,
-                email   : value.email
-            })
-        }).catch(err => {
-                res.status(400).json({
-                    err
-            })
-        });
-    }else {
+        // User email validation: Prevents email duplication
+        let emailVal = usersModel.findOne({'email' : req.body.email})
+        
+        //if email exists send a message, else create the new user
+        emailVal.then(result => {
+            if(result) {
+                return res.status(400).json({message : "User email already exists"})
+            }else {
+                let user = createUser(req.body);
+                user.then(value => {
+                    res.json({
+                        name    : value.name,
+                        email   : value.email
+                    })
+                }).catch(err => {
+                        res.status(400).json({
+                            err
+                        })
+                })
+            }
+            return result;
+        }).catch(err => res.status(400).json({Error : "Server error"}));
+    }else{
         res.status(400).json({
             error 
         });
