@@ -29,6 +29,19 @@ route.get('/', (req, res) => {
 });
 
 route.post('/', (req,res) => {
+
+    // User email validation: Prevents email duplication
+    usersModel.findOne({email : req.body.email}, (err, user) => {
+        if(err){
+            return res.status(400).json({error: "Server error"})
+        }
+
+        if(user){
+            return res.status(400).json({message : "User email already exists"})
+        }
+    });
+    
+    //Schema validation to user name and user email
     const {error, value} = schema.validate({name : req.body.name, email : req.body.email});
     if (!error) {
         let result = createUser(req.body);
@@ -107,8 +120,8 @@ async function createUser(body) {
 async function updateUser(email, body) {
     let user = await usersModel.findOneAndUpdate({'email' : email}, {
         $set: {
-            name : body.name,
-            password : body.password
+            name        : body.name,
+            password    : body.password
         }
     },{new : true});
     
