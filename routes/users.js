@@ -1,6 +1,7 @@
 const express = require('express');
 const usersModel = require('../models/users_model');
 const route = express.Router();
+const verifyToken = require('../middlewares/auth');
 const Joi = require('Joi');
 const bcrypt = require('bcrypt');
 
@@ -17,7 +18,7 @@ const schema = Joi.object({
         .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
 });
 
-route.get('/', (req, res) => {
+route.get('/',verifyToken,(req, res) => {
     result = searchUserList();
     
     result.then(list => {
@@ -63,7 +64,7 @@ route.post('/', (req,res) => {
     };
 });
 
-route.put('/:email', (req,res) => {
+route.put('/:email',verifyToken, (req,res) => {
 
     const {error, value} = schema.validate({name : req.body.name});
     if(!error){
@@ -86,7 +87,7 @@ route.put('/:email', (req,res) => {
     }
 });
 
-route.delete('/:email', (req,res) => {
+route.delete('/:email', verifyToken, (req,res) => {
     let email = req.params.email;
     let result = changeStatus(email)
     

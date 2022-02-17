@@ -19,7 +19,15 @@ route.post('/', (req,res) => {
                     data: {_id: result._id, name: result.name, email: result.email}
                 },token.SEED,{expiresIn: token.expiration});
                 
-                res.send(jwebtoken);
+                res.json({
+                    user : {
+                        _id: result._id, 
+                        name: result.name, 
+                        email: result.email
+                    },
+                    jwebtoken 
+                });
+                
             }else{
                 res.status(400).json({Message : "Invalid user or password "});
             }

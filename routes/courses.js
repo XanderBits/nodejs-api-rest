@@ -1,8 +1,9 @@
 const express = require('express');
 const route = express.Router();
 const courseModel = require('../models/courses_models');
+const verifyToken = require('../middlewares/auth');
 
-route.get('/', (req, res) => {
+route.get('/', verifyToken, (req, res) => {
     result = searchCourseList();
     result.then(list => {
         res.json(list)
@@ -13,7 +14,7 @@ route.get('/', (req, res) => {
     });
 });
 
-route.post('/', (req,res) => {
+route.post('/', verifyToken, (req,res) => {
     let result = createCourse(req.body);
     result.then(value => {
         res.json({
@@ -26,7 +27,7 @@ route.post('/', (req,res) => {
     });
 });
 
-route.put('/:id', (req,res) => {
+route.put('/:id', verifyToken, (req,res) => {
     let result = updateCourse(req.params.id, req.body)
         result.then( value => {
             res.json({
@@ -40,7 +41,7 @@ route.put('/:id', (req,res) => {
         return result;   
 });
 
-route.delete('/:id', (req,res) => {
+route.delete('/:id', verifyToken, (req,res) => {
     
     let result = changeStatus(req.params.id);
     result.then(value => { 
