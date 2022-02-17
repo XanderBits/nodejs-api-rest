@@ -13,12 +13,11 @@ route.post('/', (req,res) => {
                 if(!passwordVal) return res.status(400).json({
                     Message : "Invalid user or password "
                 });
+
                 const jwebtoken = jwt.sign({
-                    _id     : result._id, 
-                    name    : result.name, 
-                    email   : result.email},
-                    'password'
-                );
+                    data: {_id: result._id, name: result.name, email: result.email}
+                },'secret',{expiresIn: '1h'});
+                
                 res.send(jwebtoken);
             }else{
                 res.status(400).json({Message : "Invalid user or password "});
