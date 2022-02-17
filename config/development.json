@@ -1,0 +1,10 @@
+{
+    "name": "Nodejs/Expressjs API REST",
+    "dbConfig": {
+        "host": "mongodb://localhost:27017/nodeApi"
+    },
+    "tokenConfig": {
+        "SEED" : "secret",
+        "expiration" : "1h"
+    }
+}

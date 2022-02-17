@@ -3,7 +3,8 @@ const usersModel = require('../models/users_model');
 const route = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-
+const config = require('config')
+const token = config.get('tokenConfig')
 
 route.post('/', (req,res) => {
     usersModel.findOne({'email' : req.body.email})
@@ -16,7 +17,7 @@ route.post('/', (req,res) => {
 
                 const jwebtoken = jwt.sign({
                     data: {_id: result._id, name: result.name, email: result.email}
-                },'secret',{expiresIn: '1h'});
+                },token.SEED,{expiresIn: token.expiration});
                 
                 res.send(jwebtoken);
             }else{

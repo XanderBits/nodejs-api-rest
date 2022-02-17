@@ -1,0 +1,12 @@
+{
+    "name": "Nodejs/Expressjs API REST",
+    "dbConfig": {
+        "host": "localhost",
+        "port": 27017,
+        "dbName": "nodeApi"
+    },
+    "tokenConfig": {
+        "SEED" : "secret",
+        "expiration" : "1h"
+    }
+}
