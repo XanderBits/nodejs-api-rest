@@ -16,7 +16,7 @@ route.post('/', (req,res) => {
                 });
 
                 const jwebtoken = jwt.sign({
-                    data: {_id: result._id, name: result.name, email: result.email}
+                    user: {_id: result._id, name: result.name, email: result.email}
                 },token.SEED,{expiresIn: token.expiration});
                 
                 res.json({

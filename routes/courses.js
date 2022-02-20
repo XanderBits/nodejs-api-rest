@@ -4,6 +4,7 @@ const courseModel = require('../models/courses_models');
 const verifyToken = require('../middlewares/auth');
 
 route.get('/', verifyToken, (req, res) => {
+
     result = searchCourseList();
     result.then(list => {
         res.json(list)
@@ -15,7 +16,7 @@ route.get('/', verifyToken, (req, res) => {
 });
 
 route.post('/', verifyToken, (req,res) => {
-    let result = createCourse(req.body);
+    let result = createCourse(req);
     result.then(value => {
         res.json({
             value
@@ -57,14 +58,17 @@ route.delete('/:id', verifyToken, (req,res) => {
 });
 
 async function searchCourseList() {
-    let courseList = await courseModel.find({'status' : true})
+    let courseList = await courseModel
+    .find({'status' : true})
+    .populate('author', 'name-_id');
     return courseList;
 }
 
-async function createCourse(body) {
+async function createCourse(req) {
     let course = new courseModel({
-        title           : body.title,
-        description     : body.description
+        title           : req.body.title,
+        author          : req.user._id,
+        description     : req.body.description
     });
 
     return await course.save();
